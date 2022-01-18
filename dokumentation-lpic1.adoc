@@ -1,0 +1,58 @@
+# Dokumentation Schulung LPIC-1
+
+## Montag
+
+- Geschichte von Linux
+- Manpages -> `man <kommando>` 
+- grundlegende Kommandos (BASH):
+
+---- 
+touch
+ls
+cd
+rm
+mkdir
+apropos
+whereis
+info
+---- 
+
+- Aufbau von Kommandos:
+
+----
+kommando [-o/--option]... [argument]...
+----
+
+## Dienstag
+
+- Befehle Dateiverwaltung:
+----
+cp
+cp  -r (rekursiv)
+cp -a
+mv
+mv (kein -r noetig)
+rm
+rm -r
+----
+
+- absolute (beginnen immer mit einem `/`) und relative Pfadangaben
+- Sonderzeichen: `*`, `?`, ` ` (Leerzeichen)
+- Escapen von Sonderzeichen
+- Suche innerhalb der Manpages
+- Variablen (Vererbung/Subshells)
+- Kommando `export`
+- Ausgabe des Inhalts von Variablen mit `echo $varname`
+- Kommanod `env`
+
+
+
+
+
+
+
+
+
+
+
+
