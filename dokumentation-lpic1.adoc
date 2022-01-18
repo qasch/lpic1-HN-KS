@@ -44,6 +44,7 @@ rm -r
 - Kommando `export`
 - Ausgabe des Inhalts von Variablen mit `echo $varname`
 - Kommanod `env`
+- `git`
 
 
 
