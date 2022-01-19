@@ -71,6 +71,21 @@ source !$
   - `etc`: beinhaltet *alle* systemweiten Konfigurationsdateien
   - `root`: Heimatverzeichnis des Benutzers `root`
   - `boot`: Dateien für den Bootloader, Linux Kernel etc.
+- Kommanodsubstitution:
+  - `echo $(kommando)`: kommando wird ausgeführt und das Ergebnis von `echo` ausgegeben
+- `grep` sucht nach Suchbegriffen innerhalb von Dateien
+
+### Textstroeme, Filter und Umleitungen
+- Standardkanäle:
+  - `stdin`: Kanal 0 - Eingabekanal 
+  - `stdout`: Kanal 1 - Ausgabkanal 
+  - `stderr`: Kanal 2 - Fehlerkanal 
+- Umleitungen / Redirects:
+  - Kanäle koennen in andere Kanaele oder Dateien umgeleitet werden
+  - `>` Dateiinhalt wird ersetzt
+  - `>>` neue Ausgabe wird an bestehende Datei angehängt
+- Pipes `|`
+  - die Ausgabe (Kanal 1) eines Kommandos wird an die Eingabe (Kanal 0) eines weiteren Programms geleitet
 
 
 
@@ -84,3 +99,8 @@ source !$
 
 
 
+
+kai@debian10:~$ # 1. Schreibe  Programme, die genau eine Aufgabe erfüllen
+kai@debian10:~$ # diese Aufgabe sollen diese Programme GUT machen
+kai@debian10:~$ # 2. Text ist ein universelles Format
+kai@debian10:~$ # 3. Programme sollen also Text(stroeme) verarbeiten koennen
