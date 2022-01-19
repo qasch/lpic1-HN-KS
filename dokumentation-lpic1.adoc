@@ -46,6 +46,33 @@ rm -r
 - Kommanod `env`
 - `git`
 
+## Mittoch
+
+- Aufbau Shell-Prompt (Variable `PS1`)
+- Definition eigener Aliase (in `.bash_aliases`)
+- "Sicherheitseinstellungen" für `cp`, `rm` und `mv` (`-i`)
+- Shell Builtins / externe Kommandos
+- Pipe `|`
+- `less`: Seitenweises Anzeigen von Dateien/Textstroemen
+- persoenliche / systemweite Konfigurationsdateien: z.B. `~/.bashrc` bzw. `/etc/bash.bashrc`
+- `!$`: hiermit kann das letzte Argument des zuletzt eingegebenen Kommandos aufgerufen werden:
+
+----
+# Datei editieren
+nano ~/.bash_aliase
+
+# Datei sourcen
+. !$
+source !$
+----
+
+- Verzeichnisse: 
+  - `home`: beinhaltet die Heimatverzeichnisse der Benutzer
+  - `etc`: beinhaltet *alle* systemweiten Konfigurationsdateien
+  - `root`: Heimatverzeichnis des Benutzers `root`
+  - `boot`: Dateien für den Bootloader, Linux Kernel etc.
+
+
 
 
 
