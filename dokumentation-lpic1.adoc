@@ -87,6 +87,11 @@ source !$
 - Pipes `|`
   - die Ausgabe (Kanal 1) eines Kommandos wird an die Eingabe (Kanal 0) eines weiteren Programms geleitet
 
+### UNIX Philosophie
+- Schreibe Computerprogramme so, dass sie nur eine Aufgabe erledigen und diese gut machen.
+- Schreibe Programme so, dass sie zusammenarbeiten.
+- Schreibe Programme so, dass sie Textströme verarbeiten, denn das ist eine universelle Schnittstelle.
+- vereinfacht: Mache nur eine Sache und mache sie gut.
 
 
 
@@ -95,12 +100,3 @@ source !$
 
 
 
-
-
-
-
-
-kai@debian10:~$ # 1. Schreibe  Programme, die genau eine Aufgabe erfüllen
-kai@debian10:~$ # diese Aufgabe sollen diese Programme GUT machen
-kai@debian10:~$ # 2. Text ist ein universelles Format
-kai@debian10:~$ # 3. Programme sollen also Text(stroeme) verarbeiten koennen
