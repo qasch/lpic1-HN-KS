@@ -165,7 +165,58 @@ chmod ug+rwx datei  # User und Gruppe alle Rechte hinzufügen
 ### sudo
 - um einem Benutzer sudo-Rechte zu gewähren, kann dieser z.B. in die Gruppe `sudo` oder `wheel` (distributionsabhängig) hinzugefügt werden
 
+### curl / wget
+- CLI Programme zum Herunterladen ganzer Webseiten, Dateien, Bilder etc.
+- Koennen auch zur Prüfung der Erreichbarkeit von Webseiten eingesetzt werden
 
 
+## Montag
+
+### 101.1 Hardwareeinstellungen / Boot Prozess
+
+#### Komponenten Boot
+1. Anschalten
+2. BIOS (Basis Input Output System) / UEFI (Unified Extensible Firmware Interface) 
+3. Power On Self Test (POST): grundlegender Hardwaretest
+4. Bootloader (GRUB oder anderer)
+5. OS (Linux-Kernel) wird gestartet
+6. Kernelspace -> Userspace (`init` / `systemd`)
+
+#### PCI
+
+- `lspci` - Liste aller am PCI-Bus angeschlossener Geräte
+- einzelne Geräte koennen über Bus angesprochen werden
+
+#### USB 
+
+- `lsusb` - Liste angeschlossener USB Geräte 
+- einzelne Geräte koennen über ID oder Bus angesprochen werden
+
+##### USB 1.1
+- `usb-ohci.o` -> Open Host Controller Interface
+- `usb-uhci.o` -> Universal Host...
+
+##### USB 2.0
+- `usb-ehci.o` -> Enhanced ...
+
+##### USB 3
+- `usb-xhci.o` -> Extensible ...
+ 
+##### proc/ und sys/
+- hier werden zur Laufzeit Informationen über Programme/Prozesse/System an sich hinterlegt
+- diese koennen meist nur eingesehen, manchmal aber auch durch einfache Schreiboperationen (z.B. mit `echo` auf die gegebene Datei verändert werden (nur für aktuellen Bootvorgang))
 
 
+### Dienstag
+
+#### 103.5 Prozesse
+- Was sind Prozesse
+- Vordergrung/Hintergrund `bg`, `fg`, `<kommando> &`
+- Prozesse überwachen mit `ps`, `jobs`, `top`
+- Signale an Prozesse senden mit
+  - `kill` bzw. `killall` und `pkill`
+  - Tastenkombinationen `STRG+C`, `STRG+Z`
+- PID herausfinden mit `pgrep`
+- Prozesse von der aktuellen Shell "loesen":
+  - `nohup`
+  - Terminal Multiplexer `screen` (`tmux`, `byobu`)
