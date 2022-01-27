@@ -229,7 +229,7 @@ TODO
 
 ### Donnerstag
 
-#### Reguläre Ausdrücke
+#### Regular Expressions
 
 ----
 .       - Any Character Except New Line
@@ -246,8 +246,7 @@ TODO
 $	- Zeilenende
 ----
 
-# Quantifier (act on previous symbol)
-
+##### Quantifier (act on previous symbol)
 ----
 * 	- 0 or more
 +	- 1 or more
@@ -258,8 +257,7 @@ $	- Zeilenende
 {,n}	- maximum n times
 ----
 
-# Character Sets / List of characters
-
+##### Character Sets / List of characters
 ----
 [abc] 	- one of a, b or c
 [0-9] 	- range from 0 to 9 <=> \d
@@ -268,15 +266,14 @@ $	- Zeilenende
 |	- either or
 ----
 
-# Groups
-
+##### Groups
 ----
 ()		- Group
 (expr1|expr2)	- either expr1 or expr2
 ----
 
 
-# Examples
+##### Examples
 ----
 # RegEx
 ^\(?[0-9]{4}(\)\s|[.-])\d{6}$
