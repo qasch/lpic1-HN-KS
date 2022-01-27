@@ -220,3 +220,99 @@ chmod ug+rwx datei  # User und Gruppe alle Rechte hinzufügen
 - Prozesse von der aktuellen Shell "loesen":
   - `nohup`
   - Terminal Multiplexer `screen` (`tmux`, `byobu`)
+
+
+### Mittwoch
+
+TODO
+
+
+### Donnerstag
+
+#### Reguläre Ausdrücke
+
+----
+.       - Any Character Except New Line
+\d	- Digit (0-9)
+\D	- Not a Digit (every character except 0-9)
+\s 	- any Whitespace (Space, Tab, Newline)
+\S 	- Not a  Whitespace
+\w	- Word character (a-z, A-Z, 0-9, _, -)
+\W	- Not a Word character 
+
+
+\b 	- word Boundary
+^ 	- Zeilenanfang
+$	- Zeilenende
+----
+
+# Quantifier (act on previous symbol)
+
+----
+* 	- 0 or more
++	- 1 or more
+?	- 0 or 1  /  optional
+{n}	- exactly n times
+{n,m}   - between n and m times
+{n,}	- minimum n times
+{,n}	- maximum n times
+----
+
+# Character Sets / List of characters
+
+----
+[abc] 	- one of a, b or c
+[0-9] 	- range from 0 to 9 <=> \d
+[a-z] 	- range from a to z
+[^a] 	- not a
+|	- either or
+----
+
+# Groups
+
+----
+()		- Group
+(expr1|expr2)	- either expr1 or expr2
+----
+
+
+# Examples
+----
+# RegEx
+^\(?[0-9]{4}(\)\s|[.-])\d{6}$
+
+# Matches
+0561.807000
+0561-807000
+(0561) 807000
+
+# Does not match
+0561_807000kkkkkkkkkkkk
+----
+
+----
+# RegEx
+^https?://([a-z0-9]+\.)?([a-z0-9]+\.)?[a-z]{2,3}$
+^https?://([a-z0-9]+\.)?([a-z0-9]+\.)?(de|com|org|eu)$
+
+# matches:
+https://gfn.de
+https://www.gfn.de
+http://mypage.com
+https://www.google.eu
+https://meine.haustiere.com
+
+# does not match:
+https://meine.haustiere
+https://Meine.Haustiere.de
+https://ätsch.de
+http://_dontmatch.ch
+https://*auchnicht.de
+http://(nlll.lkj
+https//no.org
+https://gfn-de
+htps:/bla.com
+http://localhost
+http://mocalhost
+httpw://nonono
+----
