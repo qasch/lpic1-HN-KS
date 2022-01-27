@@ -313,3 +313,9 @@ http://localhost
 http://mocalhost
 httpw://nonono
 ----
+
+##### Links
+- https://www.debuggex.com/  (Regex Editor mit grafischer Repräsentation)
+- http://regexe.de/	(Regex Editor mit Suchen und Ersetzen)
+- https://regexone.com/	(Regex Tutorial)
+- https://www.regular-expressions.info/
