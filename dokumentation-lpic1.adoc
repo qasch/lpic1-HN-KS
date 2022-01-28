@@ -218,14 +218,31 @@ chmod ug+rwx datei  # User und Gruppe alle Rechte hinzufügen
   - Tastenkombinationen `STRG+C`, `STRG+Z`
 - PID herausfinden mit `pgrep`
 - Prozesse von der aktuellen Shell "loesen":
-  - `nohup`
+  
   - Terminal Multiplexer `screen` (`tmux`, `byobu`)
 
 
 ### Mittwoch
 
-TODO
+#### locate
+- sehr schnell, da Datenbank bei der Suche abgefragt wird
+- diese muss erzeugt werden (wird automatisch vom System erledigt, periodisch -> `cron`)
+- manuelle Aktualisierung mit `sudo updatedb` -> noetig, um neue Dateien über die Suche zu finden
+- keine/wenige Moeglichkeiten, genauere Suchkriterien festzulegen
 
+#### find
+- durchsucht das Dateisystem an sich, kein Zugriff auf eine Datenbank
+- Suchkriterien (_TESTs_ in der Manpage) koennen sehr fein eingestellt werden (Zeitpunkt letzte Dateiänderung, Groesse, Besitzverhältnisse, gesetzte Berechtigungen etc.)
+- Suchkriterien/Optionen werden durch ein Minuszeichen und der Langform angegeben, z.B. `-name`, `-type`, etc. 
+- als Suchbegriff kann ein Regulärer Ausdruck verwendet werden
+- auf die einzelnen Suchergebnisse koennen Dateioperationen durchgeführt werden (`find ... -exec ls -l {} \;`)
+- wird `find` als regulärer Benutzer ausgeführt und das gesamte Dateisystem durchsucht koennen/sollten die Fehler (fehlende Berechtigungen) über einen Redirect nach `/dev/null` umgeleitet werden: `find / -name "wasauchimmer" 2>/dev/null`
+
+#### vi / vim
+- `vi` ist der Standardeditor auf jedem Linuxsystem (vorinstalliert)
+- `vim` -> ViImproved
+- sehr eigenes Bedienkonzept (Normalmode, Insertmode, Commandmode, Visualmode ...)
+- Tutorial mittels Kommando `vimtutor` aufrufbar
 
 ### Donnerstag
 
