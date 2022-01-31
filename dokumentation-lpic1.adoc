@@ -336,3 +336,55 @@ httpw://nonono
 - http://regexe.de/	(Regex Editor mit Suchen und Ersetzen)
 - https://regexone.com/	(Regex Tutorial)
 - https://www.regular-expressions.info/
+
+
+## Freitag
+
+### Partitionierung
+- Kommandos `fdisk` (MBR, mittlerweile auch GPT), `gdisk` (nur GPT) -> interaktiv
+- Änderunen werden erst übernommen, wenn `w` für _Schreiben_ gewählt wird
+- `parted` ist ein weiteres Partitionierungstool
+  - hier werden Ånderungen direkt durchgeführt (koennen aber mit `rescue` rückgängig gemacht werden)
+  - es koennen hiermit auch Disklabels vergeben werden
+
+### MBR / GPT
+- im MBR befindet sich die Partitionstabelle (Anfang der Festplatte)
+  - kann mit `dd` gesichert werden: `dd if=/dev/sda of=mbr.bak bs=512 count=1`
+- es koennen maximal vier _primäre_ Partitionen erstellt werden
+- eine dieser vier Partitionen kann als _erweiterte_ Partition definiert werden, diese kann dann weitere _logische_ Partitionen enthalten (erstel logische Partition hat immer die Nummer 5 -> `/dev/sda5`)
+- weitere Beschränkungen im Vergleich zu GPT
+- GPT speichert zusätzlich eine zweite Version/Kopie der Partitionstabelle
+
+### Dateisysteme
+- `ext4` ist das Standarddateisystem unter Linux 
+- weitere Dateisystemem: ext2, ext3, xfs, btrfs, vfat, ...
+- Dateisysteme erzeugen mit `mkfs` bzw. `mk2fs`
+- `btrfs` bietet weitere Funktionalitäten wie z.B. Subvolumes, Snapshots etc.
+- für die Verwendung weiterer Dateiesysteme müssen die entsprechenden Pakete installiert werden: `xfsprogs`, `btrfs-progs` ...
+- mit `tune2fs` koennen Eigenschaften des Dateisystems verändert werden
+  - z.B. Konvertierung von `ext2` nach `ext3`
+
+### Mounten
+- durch das Mounten wird die Gerätedatei (z.B. `/dev/sdb1`) mit einem Verzeichnis verknüpft (z.B. `/mnt`)
+- nur so kann die Partition auch benutzt werden
+- Kommando ist `mount <Gerätedatei> <existierendes Verzeichnis/Mountpoint>`
+- die statische Konfiguration wird in der Datei `/etc/fstab` vorgenommen
+  - Einträge, bei denen die Option `auto` gesetzt ist, werden beim Boot automatisch eingebunden, aber nicht im laufenden system
+  - für "richtiges" Automount sind weitere Tools noetig
+  - angegebene Optionen koennen sich überschreiben (Reihenfolge), nützlich, um `defaults` Optionen anzupassen
+  - unbedingt auf richtige Syntax auchten, sonst kann es zu Problemen beim Booten kommen
+- Dateisysteme müssen ordnungsgemäss entbunden werden: `umount`
+  - hierfür darf sich das Gerät/Verzeichnis nicht mehr in Benutzung befinden (Überprüfung mit `lsof`)
+
+
+
+
+
+
+
+
+
+
+
+
+
