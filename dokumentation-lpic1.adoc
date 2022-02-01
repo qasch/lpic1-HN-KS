@@ -376,6 +376,61 @@ httpw://nonono
 - Dateisysteme müssen ordnungsgemäss entbunden werden: `umount`
   - hierfür darf sich das Gerät/Verzeichnis nicht mehr in Benutzung befinden (Überprüfung mit `lsof`)
 
+## Montag
+
+### SysV-Init
+- altes Init System, Vorgänger von `systemd`, Prozess heisst `init` mit PID 1
+- Startvorgang verläuft sequentiell, d.h. keine parallele Abarbeitung -> recht langsam
+- Dienste/Startvorgang werden über Shell-Skripte konfiguriert/gestartet
+- Kommando zur Steuerung von Diensten ist `service`: z.B. `service ssh status`
+- Skripte liegen unter `/etc/init.d`
+
+### Runlevel
+- _Betriebszustände_ in denen sich das System befinden kann
+- werden beim Bootvorgang durchlaufen
+- es gibt die Runlevel 1 bis 6
+- Runlevel werden in der Datei `/etc/inittab` definiert
+  - Runlevel 0: Computer ausschalten
+  - Runlevel 1: Single User Mode / Rescue Mode (vergleichbar mit dem _Abgesicherten Modus_
+  - Runlevel 2: Multi User Mode
+  - Runlevel 3: zusätzlich Netzerk
+  - Runlevel 4: nicht genutzt
+  - Runlevel 5: zusätzlich grafische Oberfläche
+  - Runlevel 5: Reboot
+- Definition ist nicht starr, kann angepasst werden
+- in den Verzeichnissen `/etc/rc0.d` bis `/etc/rc6.d` liegen Symlinks auf Skripte, die Dienste starten bzw. stoppen
+- Skripte/Dienste mit einem `S` am Anfang werden beim Betreten des Runlevel gestartet, solche mit einem `K` entsprechend gestoppt, Reihenfolge über Zahlen hinter `S` oder `K`
+  
+### systemd
+- Nachfolger von SysV-Init
+- Dienste werden beim Boot parallel gestartet
+- Abhängigkeiten zu anderen Diensten koennen definiert werden
+- Dienste werden nicht mehr über Shell Skripte, sondern über Unit Files konfiguriert
+- Entsprechung zu den Runleveln sind _targets_, z.B. `rescue.target`, `graphical.target` etc.
+  - `systemctl isolate rescue.target` um in den "Wartungsmodus" zu gelangen
+- Unit Files liegen unter `/lib/systemd/system`, _aktive_ (per Symlink) unter `/etc/systemd/system/` (ähnliches Prinzip wie beim Apache `sites-available` und `sites-enabled`
+
+### tar
+- Archivierungstool: fasst mehrere Dateien zu einer einzigen zusammen
+- Syntax gewoehungsbedürftig
+- Beispiele:
+  - Archiv erstellen: `tar -cvf myarchive.tar directory/ file1 file2`
+  - Archiv extrahieren: `tar -xvf myarchive.tar`
+  - gzip komprimiertes Archiv erstellen: `tar -cvzf myarchive.tar.gz dir/ file1`
+  - bzip2 komprimiertes Archiv erstellen: `tar -cvjf myarchive.tar.bz2 dir/ file1`
+  - xz komprimiertes Archiv erstellen: `tar -cvJf myarchive.tar.xz dir/ file1`
+  - beim Extrahieren von komprimierten Archiven erkennt `tar` den Komprimierungsalgorythmus automatisch (kann aber auch angegeben werden)
+  - Inhalt des Archivs anzeigen: `tar -tf archiv.tar`, `tar --list -f archive.tar`
+- wird eine Datei angegeben (mit `-f`), muss das `-f` als letzte Option direkt vor dem Dateinamen stehen
+  - ist bei der alten UNIX Syntax (ohne Minuszeichen) egal
+
+### Kompression
+- nur einzelne Dateien koennen komprimiert werden, ansonsten vorher mit `tar` ein Archiv erstellen
+- die Originaldatei wird durch die komprimierte ersetzt
+- gzip / gunzip
+- bzip2 / bunzip
+- xz /unxz
+- (compress)
 
 
 
