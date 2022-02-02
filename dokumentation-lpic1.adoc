@@ -432,9 +432,52 @@ httpw://nonono
 - xz /unxz
 - (compress)
 
+## Dienstag
 
+### Paketverwaltung Debian
 
+#### dpkg
+- dpkg: "Backend hinter `apt`"
+- kann  Pakete installieren, deinstallieren etc.
+- Einschränkungen: keine Pakekte übers Internet installieren, kann keine Abhängigkeiten aufloesen, zeigt diese allerdings an
+- im Verzeichnis `/var/lib/dpkg` befinden sich Dateien und Verzeichnisse, die eine Art Datenbank für `dpkg` (und `apt`) sind
+- Informationen über Pakete, deren Zustand (installiert, teilweise installiert), verfügbare Pakete etc  finden sich hier
+- `dpkg -i /--install <pfad-zum-deb-paket>`: installiert lokal vorhandenes Paket  
+- `dpkg -Ri / --recursive --install <verzeichnis>`: installiert alle `*.deb` Pakete im Verzeichnis (rekursiv)
+- `dpkg -r / --remove <paketname>`: Entfernt Paket, Konfigdateien bleiben erhalten  
+- `dpkg -P / --purge <paketname>`: Paket und Konfigdateien werden entfernt  
+- `dpkg -l / --list <suchbegriff>`: eine Liste aller Pakete, die auf einen Suchbegriff passen  
+- `dpkg -L / --listfiles <paketname>`: listet alle Dateien auf, die ein Paket installiert
+- `dpkg -S / --search <dateiname-absoluter Pfad>`: in welchem Paket befindet die angegebene Datei
+- `dpkg -s / --status <paketname>`: Status des Paketes anzeigen  
+- `dpkg -C / --audit`: alle Pakete, die nicht vollständig installiert sind
+- `dpkg -c / --contents <deb-paket>`: zeigt Inhalt des Pakets an
+- `dpkg-reconfigure <paketname>`: installiertes Paket neu konfigurieren (TUI Interface -> wird so auch bei der eigentlichen Installation aufgerufen)
 
+#### apt-get / apt
+- Frontend für `dpkt`
+- kann  Pakete über das Internet herunterladen und installieren
+- loest Abhängigkeiten automatisch auf
+- nutz `dpkg` im Hintergrund 
+- `apt-get` und `apt` in der Bedienung sehr ähnlich
+- `apt` vereint "Unterprogramme" von `apt` (`apt-get`, `apt-cache`...) zu einem 
+- `apt-get install`: Paket installieren
+- `apt-get remove`: Paket entfernen (Konfigdateien bleiben erhalten)
+- `apt-get remove --purge`: Paket und Konfigdateien entfernen
+- `apt-get purge`: Paket und Konfigdateien entfernen
+- `apt-get update`: Paketindex aktualisieren
+- `apt-get upgrade`: aktualiert alle vorhandenen Pakete, es werden aber niemals neue Pakete als Abhängigkeit hinzugefügt oder entfernt (diese zurückgehaltene Pakete werden angezeigt)
+- `apt-get dist-upgrade`: aktualisiert alle installierten Pakete (entfernt bzw. installiert ggf. zusätzlich Pakete aufgrund geänderter Abhängigkeiten) -> Unterschied zu `apt-get upgrade`, hiermit werden die von `apt-get upgrade` zurückgehaltenen Pakete installiert/aktualisiert
+- `apt-cache policy`: installierte Version / Version im Paketindex anzeigen
+- `apt-cache show`: detaillierte Inforamtionen über ein Paket
+- `apt-cache serach`: nach einem Paket suchen
+- `apt-cache depends`: welche Abhängigkeiten hat das Paket
+- `apt-cache rdepends`: welche anderen Pakete hängen von diesem Paket ab
+- `apt-cache stats`: Statistik über Cache/Paketindex
+- `apt-get autoremove`: entfernt nicht mehr benoetigte Pakete, die *als Abhängigkeit automatisch* installiert wurden. In der Regel sicher zu nutzen, kann unter Umständen aber zu Problemen führen
+- `apt-mark manual|auto|... <paket>`: Paket als manuell/explizit | automatisch installiert markieren
+- `alien --to-rpm <deb-paket>`: wandelt `.deb` Paket in ein `.rpm` Paket um
+- `alien --to-deb <rpm-paket>`: wandelt `.rpm` Paket in ein `.deb` Paket um
 
 
 
