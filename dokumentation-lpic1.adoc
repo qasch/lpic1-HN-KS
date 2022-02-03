@@ -479,6 +479,62 @@ httpw://nonono
 - `alien --to-rpm <deb-paket>`: wandelt `.deb` Paket in ein `.rpm` Paket um
 - `alien --to-deb <rpm-paket>`: wandelt `.rpm` Paket in ein `.deb` Paket um
 
+## Mittwoch
+
+### RPM Paketverwaltun
+
+#### rpm
+- Backend hinter yum/dnf
+- vergleichbar mit `dpkg`
+- "Datenbank" unter `/var/lib/rpm` 
+- `rpm -i / --install <paket.rpm>`: RPM Paket installieren 
+- `prm -iv / -ivv / -ivv <datei.rpm>`: Installation _verbose_ verfolgen (Ausgabe der einzelnen Schritte auf `stdout`), kann auch mit anderen Optionen kombiniert werden  
+- `rpm -e / --erase <paketname>`: Paket deinstallieren
+- `rpm -U / --upgrade <paket.rpm>`: Paket aktualisieren bzw. installieren falls noch nicht vorhanden
+- `rpm -F / --freshen <paket.rpm>`: Paket aktualisieren aber nicht installieren falls noch nicht vorhanden
+- `rpm -h / --hash`: zeigt Fortschrittsbalken an
+- `rpm --force`: erzwingt Aktion
+- `rpm --nodeps`: keine Prüfung der Abhängigkeiten
+
+##### Package Selection Options
+- `rpm -q / --query <paketname>`: Anzeige `.rpm` Datei 
+- `rpm -qa / --query --all`: Welche Pakete sind installiert
+
+##### Package Query Options
+- `rpm -qR / --query --requires <paketname>`: Abhängigkeiten auflisten
+- `rpm -ql / --query --list <paketname>`: alle Dateien des Pakets auflisten
+- `rpm -qi / --query --info <paketname>`: Informationen über Paket
+- `rpm -qc / --query --configfiles <paketname>`: nur Konfigurationsdateien des Pakets anzeigen
+- `rpm -qf / --query --file </pfad/zur/datei>`: zu welchem Paket gehoert `datei`
+- `rpm -qd / --query --docfiles <paketname>`: Dokumentationsdateien eins installierten Paktes anzeigen
+- `rpm -qdp / --query --docfiles --package <paket.rpm>`: Dokumentationsdatein eines nicht installierten Pakets anzeigen (`-p` auch auf andere Optionen anwendbar)
+- `rpm -V / --verify <paket>`: Paketüberprüfung: nach z.B. geänderte Dateigroesse, MD5 Summer, Besitzrechte etc.
+- `rpm -K / --checksig <paket.rpm>`: Signatur des Pakets vor der Installation prüfen (nicht prüfungsrelevant, zusätzlich muss GPG verwendet und konfiguriert werden)
+
+#### cpio
+- `rpm` kann keine Pakete entpacken, wir koennen aber mit `rpm2cpio` eine `cpio` Datei aus dem Paket erstellen und diese mit `cpio` entpacken: `rpm2cpio samba-3.3.2-0.33.rpm | cpio -idv usr/share/man/man7/samba.7` (entpackt nur die Datei `samba.7`, ohne Angabe Datei werden alle Dateien entpackt)
+
+#### Yum / dnf
+- Frontend für `rpm`, `dnf` ist der "Nachfolger" von `yum`
+- Konfigurationsdatei unter `/etc/yum.conf`
+- Cache Verzeichnis für z.B. heruntergeladene Pakete unter `/var/cache/dnf` (falls `dnf` im Hintergrund verwendet wird: mittlerweile Standard'
+- `yum search`
+- `yum update (paketname)`: Aktualisiert Paketindex *und* führt Aktualisierung der Pakete durch (Unterschied zu `apt`)
+- `yum install`: Pakte installieren
+- `yum remove`: Paket deinstallieren
+- `yum grouplist`: Anzeige der Paketgruppen
+- `yum groupinfo <paketgruppe>`: Info über paketgruppe
+- `yum groupinstall <paketgruppe>`: Installation der Pakete aus der Paketgruppe
+- `yum list <name>`: Liste der Pakete
+- `yum list installed`: Liste der installierten Pakete
+- `yum list updates`: verfügbare Updates
+- `yum info <paket>`: Informationen über paket
+- `yum clean`: Paketcache leeren
+- `yum clean metadata`: Metadata des Paketcache leeren
+- `yum clean all`: beides leeren
+- `yum deplist <paket>`: Abhängigkeiten des Pakets
+- `yumdownloader <paket>`: Lädt Paket herunter ohne zu installieren, Pfad kann angegeben werden `yumdownloader --dest-dir`
+
 
 
 
