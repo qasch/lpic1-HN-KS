@@ -535,8 +535,44 @@ httpw://nonono
 - `yum deplist <paket>`: Abhängigkeiten des Pakets
 - `yumdownloader <paket>`: Lädt Paket herunter ohne zu installieren, Pfad kann angegeben werden `yumdownloader --dest-dir`
 
+## Donnerstag
 
+### sed
+- der _Stream Editor_ `sed` kann alles das was `cat cut grep tail` können, universelles Kommando um Textströme zu bearbeiten, finden, anzeigen, ersetzen
+-  `sed -n /Übung/p < tutor1`: Sucht den Suchbegriff `Übung` und gibt die entsprechenden Zeilen aus. 
+- `-n` unterdrückt die automatische Ausgabe, `sed` gibt standardmässig alle Zeilen der Datei aus
+- `sed "s/Übung/Lern/" < tutor1` ersetzt das erste Vorkommen von `Übung` in jeder Zeile  durch `Lern`
+- es wird keine Änderung an der Datei vorgenommen, sondern nur im STDOUT Kanal
+- `sed "s/Übung/Lern/g" < tutor1` ersetzt alle Vorkommnisse von `Übung` durch `Lern`` 
+- durch `-i` (`--in-place`) wird die Datei geändert
+- - `sed` koennen auch mehrere Dateien als Argumente übergeben werden
+- `sed -i.backup 's/root/CV/g' ls-tmp.txt`: duchr `-i.backup` wird vor dem Ersetzen einen Kopie der Datei mit der Endung `.backup` erzeugt
+- `sed '/#/d' .bashrc` löscht alle Zeilen, die eine `#`
+- `grep -v '^#' .bashrc | grep -v '^$'` - `sed -e '/^#/d' -e '/^$/d' .bashrc` 
+- `sed '1,103d .bashrc` löscht alle zeilen von 1-103
+- `sed '1,10!d' .bashrc` löscht alle zeilen von 10 ab, das `!` invertiert hier die Bedeutung von `d` (Loeschen -> Anzeigen)
+- mehrere _Skripte_ koenne mit `-e` hintereinander ausgeführt werden
+- `sed -e '1,2p' -e '10,12!d' commands.txt` oder / `sed -n -e '3,9d' -e '1,12p' commands.txt` zeigt die nur die 1und 2. und 10-12 an 
+- `sed 'y/#alias/Berts/' .bashrc`: `y` ersetzt 1 zu 1
 
+### nl und tr
+- `nl commands.txt` fügt jeder Zeile des Streams eine Zeilennummer hinzu
+- `tr` = Zeichen übersetzen, zusammenfügren oder loeschen
+- `tr` kann keine Datei übergeben werden, muss über Redirects/Umleitungen erfolgen
+- `tr -s ' '` ersetzt mehrere direkt aufeinanderfolgende Leerzeichen durch ein einzelnes Leerzeichen
+- `tr ',' ';'`: übersetzt ein `,` in ein ';'
+
+### Hard- und Softlinks
+#### Softlinks
+- `ln -s orig1 link1` erstellt ein link von einer datei innerhalb eines ordners 
+- `ln -s ~/.bashrc ~/links/bashrc-link` erstellt ein link von einer datei wenn die beiden dateien nicht im selben Verzeichniss sond müssen sie mit absolutem Pfad angegeben werden - `ln -s ~/compression-comparsion/ ~/links/compression-comparsion-link` um ein Verzeichniss soft zu verlinken 
+- Softlinks haben immer komplette Berechtigung angezeigt haben aber die gleichen Rechte wie die Originale 
+- ist ein Zeiger auf den Dateinamen einer Datei aber nicht auf den Speicher 
+#### Hardlinks 
+- macht kein Unterschied zwischen primärer Datei 
+- ist ein weiterer Zeiger auf den Speicherbereich einer Datei im Speicher 
+- Berechtigungen werden übernommen aber können beim Hardlink seperat geändert werden 
+- Hardlinks können nicht auf Verzeichnisse angewendet werden da Verzeichnisse ja kein Zeiger auf einen Speicherbereich sondern nur einen Teil des Verzeichnissbereichs haben 
 
 
 
