@@ -574,6 +574,20 @@ httpw://nonono
 - Berechtigungen werden übernommen aber können beim Hardlink seperat geändert werden 
 - Hardlinks können nicht auf Verzeichnisse angewendet werden da Verzeichnisse ja kein Zeiger auf einen Speicherbereich sondern nur einen Teil des Verzeichnissbereichs haben 
 
+## Freitag
+
+### Ausfühungsprioritäten Prozesse
+- normale Prozesse - realtime Prozesse
+- normale Prozesse Prioriäten von 100 bis 139
+- realtime Prozesse von 0 bis 99
+- `ps` zeigt Prioritäten von -40 bis 99, wir addieren also immer 40 dazu
+- `top` zeigt Prioritäten von -100 bis 39, wir addieren alos immer 100 dazu
+- `nice` kann einem Kommando beim Start eine geringere/hoehere Ausfühtungspriorität zugewiesen werden
+  - Werte von -20 bis -1 koennen nur von `root` zugewiesen werden
+  - Werte von 0 bis 19 von normalen Benutzern
+  - ein hoeherer `nice` - Wert bedeute, dass der Prozess eine *geringere* Ausführungspriorität zugewiesen bekommt (Prozess ist weniger _nett_ zu anderen)
+- `renice` kann einem Kommando im laufenden Betrieb eine andere Priorität zugewiesen werden
+  - nur `root` kann `renice` ausführen
 
 
 
