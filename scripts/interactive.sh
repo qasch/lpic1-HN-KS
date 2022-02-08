@@ -1,6 +1,17 @@
 #!/usr/bin/env bash
 
-read -p "Soll ich das wirklich machen? [ja/nein]" antwort
+read -p "Soll ich das wirklich machen? [ja/Nein] " antwort
+
+#$antwort=${antwort:-nein}
+
+# Standardantwort setzten
+if [ "$antwort" = '' ]; then
+  antwort='nein'
+fi
+
+# Standardantwort setzten elegant
+#  command1     &&   command2
+[ $antwort = '' ] && antwort='nein'
 
 echo
 echo Eingabe: $antwort
@@ -23,6 +34,16 @@ echo
 # bash syntax mit regex
 if [[ $antwort =~ ^[Jj][Aa]?$ ]]; then
   echo "OK, alles wird geloescht! (RegEx)"
+else
+  echo "Na gut, dann nicht."
+fi
+
+echo
+
+# bash syntax mit wildcard
+# (in diesem Beispiel nicht sooo sinnvoll)
+if [[ $antwort = j* || $antwort = J* ]]; then
+  echo "OK, alles wird geloescht! (Wildcard)"
 else
   echo "Na gut, dann nicht."
 fi
