@@ -589,6 +589,36 @@ httpw://nonono
 - `renice` kann einem Kommando im laufenden Betrieb eine andere Priorität zugewiesen werden
   - nur `root` kann `renice` ausführen
 
+## Montag
 
+### Shell-Skripte
+- die erste Zeile eines Skripts beginnt mit dem sog. _Shebang_ (`#!`)
+- hier wird der Interpreter angegeben (z.B. `sh`, `bash`, `php`, `python`, `perl` ...) der das Skript ausführen soll: `#!/bin/bash` bzw. mittlerweile bessere Syntax `/usr/bin/env bash`
+- Skripte werden in einer eigenen Shell ausgeführt, die sich nach Beendigung wieder schliest (-> es koennen also z.B. keine Variablen aus einem Skript heraus exportiert werden)
+- zum Ausführen müssen Ausführungsrechte gesetzt werden (z.B. `chmod +x mein-skript.sh`), Skript wird dann über eine Pfadangabe aufgerufen (z.B. `./mein-skript.sh`)
+- Skripte koennen auch direkt einer Shell als Parameter übergeben werden um sie auszuführen (`bash mein-skript.sh`), so muss weder ein Interpreter / Shebang angegeben werden, noch Ausführungsrechte gesetzt werden
 
+### Variablen
+- `$0`: Name des Skripts 
+- `$1`: erstes übergebenes Argument 
+- `$2`: zweites übergebenes Argument 
+- `$#`: Anzahl der Argumente
+- `$*`: alle dem Skript übergebenen Argumente
+- `$@`: alle dem Skript übergebenen Argumente, in Double Quotes (`"$@"`) wird auch jedes Argument in `""` gesetzt
+- `$!`: PID des zuletzt ausgeführten Kommandos
+- `$$`: PID der aktuellen Shell 
+- `$?`: ExitCode / Rückgabewert des zuletzt ausgeführten Kommandos (alles ausser `0` ist ein Fehler)
+
+#### if - else
+- wird mit `if...then` eingeleitet und muss mit einem `fi` beendet werden
+- else if ist `elif`
+
+#### Syntaktische Elemente
+- `&&` / `||`: logisches _UND_ bzq. _ODER_ (nur in _BASH_ und innerhalb von `[[ expr1 && expr2 ]]`)
+- `-a` / `-o`: logisches _UND_ bzq. _ODER_ (in _SH_ und innerhalb von `[ expr1 -a expr2 ]`)
+- `[[ ... ]]` ist eine Erweiterung von `[ ... ]` mit mehr/anderer Syntax
+- in `[[ ... ]]` koennen auch reguläre Ausdrücke verwendet werden: `if [[ "$expr1" =~ regex ]]`
+- `[ ... ]` ist die symbolische Schreibweise für das Kommando `test` (-> `man test`)
+- bei `[ ... ]` unbedingt auf ein Leerzeichen zwischen `[` bzw. `]` und der/den `expr` achten (`if [ $var -eq $othervar ]; then ... fi`)
+- der Shell-Builiin `read` kann zum Einlesen von Benutzereingaben genutzt werden (`read -p "Eingabe: " answer`), Eingabe wird in Variable `answer` gespeichert
 
