@@ -620,5 +620,39 @@ httpw://nonono
 - in `[[ ... ]]` koennen auch reguläre Ausdrücke verwendet werden: `if [[ "$expr1" =~ regex ]]`
 - `[ ... ]` ist die symbolische Schreibweise für das Kommando `test` (-> `man test`)
 - bei `[ ... ]` unbedingt auf ein Leerzeichen zwischen `[` bzw. `]` und der/den `expr` achten (`if [ $var -eq $othervar ]; then ... fi`)
+- auch müssen hier Variablen unbedingt in Anführungszeichen gesetzt werden (`if [ "$var" = 5 ]`)
 - der Shell-Builiin `read` kann zum Einlesen von Benutzereingaben genutzt werden (`read -p "Eingabe: " answer`), Eingabe wird in Variable `answer` gespeichert
+
+## Dienstag
+
+### cron
+- Dienst, der Aufgaben (`cronjobs`)zu einem bestimmmten Zeitpunkt oder Zeitintervall automatisch ausführt
+- `cronjobs` werden nicht nachgeholt, sollte der Rechner zu dem angegebenen Zeitpunkt aus sein
+- Aufgaben werden in `crontabs` festgelegt
+- es gibt Benutzer `crontabs` für jeden Benutzer (auch `root`) und eine systemweite `crontab` unter `/etc/crontab`
+- diese unterscheidet sich von den User-crontabs (nur) dadurch, dass es eine zusätzliche Spalte für den auszuführeden Benutzer enthält
+- in den Verzeichnissen `/etc/cron.hourly`, `/etc/cron.daily` usw. koennen Skripte abgelegt werden, die dann periodisch ausgeführt werden
+- je nach Distribution koenne die Verzeichnisse auch `/etc/cron.d/daily` etc. heissen
+- User crontabs liegen unter `/var/spool/cron/crontabs`
+- die User crontab Dateien werden nicht direkt editiert, sondern mit dem Kommando `crontab -e`
+- `crontab -r` loescht die crontab des aufrufenden Benutzers
+- `crontab -l` zeigt den Inhalt der crontab an
+- `root` kann eine User crontab mit dem Kommando `crontab -u <user> -e / -l / -r` editieren, auflisten oder loeschen
+- Informationen über den Aufbau und die Angabe von Zeiten/Intervallen sind in der Manpage zu finden: `man 5 crontab`
+- in den Dateien `/etc/cron.allow` und `/etc/cron.deny` koenne Zugriffe auf den cron Daemon geregelt werden
+- existiert die Datei `/etc/cron.allow` koennen _ausschliesslich_ die darin gelisteten Benutzer (einer pro Zeile) `cron` benutzen
+- existiert die Datei `/etc/cron.deny` und *keine* `/etc/cron.allow` koennen alle nicht darin gelisteten Benutzer (einer pro Zeile) `cron` benutzen
+- existieren beide Dateien, wird nur `/etc/cron.allow`
+
+
+
+
+
+
+
+
+
+
+
+
 
