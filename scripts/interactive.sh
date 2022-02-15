@@ -10,7 +10,7 @@ if [ "$antwort" = '' ]; then
 fi
 
 # Standardantwort setzten elegant
-#  command1     &&   command2
+#  if            ...    then
 [ $antwort = '' ] && antwort='nein'
 
 echo

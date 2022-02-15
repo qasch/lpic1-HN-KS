@@ -644,12 +644,202 @@ httpw://nonono
 - existiert die Datei `/etc/cron.deny` und *keine* `/etc/cron.allow` koennen alle nicht darin gelisteten Benutzer (einer pro Zeile) `cron` benutzen
 - existieren beide Dateien, wird nur `/etc/cron.allow`
 
+### systemd-timer
+- `systemd-timer` sind eine Alternative von systemd für cron
+- diese sind Unit Files mit der Endung `.timer`
+- für jeden Timer *muss ein Unit File vorliegen*, welches den Unit beschreibt, der gesteuert wird
+- standardmäßig haben Timer und Unit Files den gleichen Namne bis auf die Endung
+- Aufbau Timer: (run the service named /etc/systemd/system/foobar.service at 05:30 on the first Monday of each month)
+
+----
+[Unit]
+Description=Run the foobar service
+
+[Timer]
+OnCalendar=Mon *-*-1..7 05:30:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+----
+- Syntax/Aufbau Eintrag `OnCalendar=` ähnlich wie bei cronjobs
+- generelle Syntax:
+
+----
+# DayOfWeek Year-Month-Day  Hour:Minute:Second
+  Mon       *   - *    1..7 05:30:00
+
+# Alternativ:
+  hourly
+  daily
+  weekly
+  monthly
+  yearly
+----
+
+- `DayOfWeek` ist optional
+- `*, /,` , wie in Cronjobs
+- mit `..` kann eine Range angegeben werden
+- es können auch monotonic timers verwendet werden
+- werden nach Ablauf einer gewissen Zeit aktiviert
+- `timer` müssen wie `services` aktiviert werde:
+
+----
+systemctl enable foobar.timer
+systemctl start foobar.timer
+
+# Alternativ:
+systemctl enable --now foobar.timer
+----
+- anschliessend muss noch das Kommando `systemctl daemon-reload` ausgeführt werden
 
 
+## Mittwoch
 
+### Mail System
 
+#### Mailsystem Komponenten
 
+- MUA: Mail User Agent -> Mail Programme / Clients: Thunderbird, Evolution, kmail, (mail,) Outlook - Mails lesen, verfassen...
+- MDA: Mail Delivery Agent -> verarbeitet Mails auf dem Server, entscheidet wo/wie sie an den Empfänger geleitet werden (lokale Zustellung/an Mailadresse): `procmail`, `cyrus`, `maildrop`
+- MTA: Mail Transfer Agent ->  "eigentlicher Mailserver", zum Senden und Empfangen von Mails: Postfix, sendmail, exim (einfach zu konfigurieren), qmail (sicherer und einfacher zu konfigurieren als z.B. sendmail)
 
+#### SMTP
+- _Simple Mail Transfer Protocol_
+- zum Empfangen von Mails
+- Port 25
+
+#### POP3 / IMAP
+- zum Senden von Mails
+- POP3: _kopiert_ Mails vom Server auf den Client, auf dem Client geloeschte Mails verbleiben auf dem Server (Port 110)
+- IMAP: _synchronisiert_ Mails zwischen Server und allen Clients, auf einem Client geloeschte Mail wird auf dem Server und somit auf allen anderen Clients geloescht (143)
+
+#### Aliase
+- Definition in `/etc/aliases`
+- vier Verfahren:
+----
+# user: user
+root: tux 
+
+# user: email
+tux: tux@linux.org
+tux: tux@linux.org, mail@tux.com, peter
+
+# user: /absoluter/pfad/datei
+tux: /home/tux/datei-in-die-mails-geschrieben-werden.txt
+
+# user: programm
+tux: '|/usr/bin/some-program.sh'
+
+# user: datei-mit-adressen (eine pro Zeile)
+tuxfreunde: :include:/home/tux/meine-freunde.txt
+----
+  
+- nachher `sudo newaliases` ausführen (oder `sudo sendmail -bi`
+
+#### Weiterleitung Benutzer
+- im Heimatverzeichnis die Datei `.forward` erstellen
+- Aufbau generell der selbe wie `/etc/aliases`, erste Spalte entfällt aber
+- nach dem Speichern der Datei ist die Weiterleitung sofort aktiv
+
+#### Dateien und Verzeichnisse
+- `/var/spool/mail` (Symlink von `/var/mail`): hier liegen die Mails, ein Verzeichnis pro Benutzer
+- `/var/spool/mqueue`: hier liegt die Mailqueue (Warteschlange)
+- `/var/spool/postfix`: "Datenbankdateien" von Postfix
+- `/etc/postfix`: Konfigurationsdateien von Postfix
+- `/etc/postfix/main.cf`: Haupt-Konfigurationsdatei von Postfix
+- `/etc/mail`: enthält die meisten Konfigutationsdateien von sendmail
+
+#### Kommandos
+- `mailq` zeigt die Mail-Warteschlange an
+- `mail` bzw. `mailx` zum Lesen und Verfassen von Mails
+
+#### Smarthost
+- ein Smarthost ist ein Mailserver (vom ISP) , der als SMTP-Relay fungiert
+- Mails werden so nicht direkt, sondern durch den SMTP-Server des ISPs ausgeliefert
+- ansonsten würden die Mails von vielen Mailservern verworfen werden (→ mögliches Relay für Spam), da eigener SMTP-Server nicht im Internet bekannt ist
+
+## Donnerstag
+
+selbstständiges Arbeiten
+
+## Freitag
+
+selbstständiges Arbeiten
+
+## Montag
+
+### Ablauffristen Passwoerter
+Ablaufdatum der Passwörter ändern
+
+- `chage -m 2 karlos` karlos kann sein Passwort frühestens nach zwei Tagen ändern (-m minimum)
+- `chage -M 21 karlos` karlos muss sein Passwort spätestens nach 21 Tagen ändern (-M Maximum)
+- `chage -l karlos` Informatinen anzeigen
+
+### Logging
+
+#### rsyslog
+- _klassischer_ Syslog
+- Nachfolger von `syslog` und `syslog-ng`
+- war Standard vor `journald`
+- `/etc/rsyslog.conf` ist die Konfigurationsdatei für den _rsyslog_
+- Aufbau: `facility:level action`
+- `facility`: _Bereich_ aus dem das Logging kommt (`auth, authpriv, cron, daemon, kern, lpr, mail, mark, news, syslog, user, uucp, local0 bis local7`)
+- `local0` bis `local7`: für Logging von eigenen Programmen/Skripten
+- `level`: Protokollierungsgrad (`debug`, `info`, `notice`, `warn`, `err`, `crit`, `alert`, `emerg`)
+- `action`: _Ziel_, in das protokolliert werden soll, meistens bestimmte Log-Datei
+
+- die meisten Logs sind im Klartext 
+- über Dateibereichtigungen wird der Zugriff geregelt
+- Log Dateien werden unter `/var/log` abgelegt
+- `/var/log/messages`
+- `/var/log/syslog`
+
+#### logrotate
+- überwacht Logdateien, so dass der Speicherplatz begrenzt wird
+- je nach Konfiguration werden mehrere (komprimierte) Dateien erstellt
+- die mit der hoechsten Nummer ist die älteste
+- Konfigurationsdatei unter `/etc/logrotate.conf`
+- Verzeichnis `/etc/logrotate.conf.d` enthält spezielle Konfigurationsdateien für einzelne Dienste (z.B. `apache2`)
+- Vorgehen:
+  - aktuelle Log-Datei `my.log` wir umbenannt in `my.log.1`
+  - neue leere Log-Datei `my.log` wird erstellt
+  - vorhandene `my.log.1` umbenannt in `my.log.2` und komprimiert (`my.log.2.gz`)
+  - usw.
+  - älteste wird je nach Einstellung geloescht
+- wird täglich von `cron` ausgeführt
+- mit dem Kommando `logger` koennen selbst Ereignisse in den Syslog geschrieben werden (Skripte)
+
+#### journald
+- kommt unter `systemd` zum Einsatz
+- übernimmt komplettes Logging
+- Konfigurationsdatei unter `/etc/systemd/journald.conf`
+  - `Storage`: wie Journal(s) gespeichert werden (s.u.)
+  - `Compress`: grosse Objekt werden `xz` komprimiert
+  - `SplitMode`: separate Journals pro User
+  - `MaxFileSec`: Analogie zu `logrotate` -> wie lange sollen Einträge in einer Datei gespeichert werden bevor sie in die nächste rotiert wird
+  - Groessenbeschränkung aber eher automatisch über selbstständige Prüfung des verbleibenden Speicherplatzes 
+- unter `/var/log/journal` wird das Journal abgelegt
+- muss in der Konfiguration mit `Storage=auto` oder `Storage=persistent` eingestellt sein
+- ansonsten wird das Journal nur im Speicher vorgehalten, ist also nach einem Reboot weg
+- `auto`: Verzeichnis `/var/log/journal` muss vorhanden sein, ansonsten Speicherung nur im RAM (bzw. unter `/run/log/journal`
+- Journal ist eine Datenbank, keine Textdatei mehr
+- Anzeige des Journals mit `journalctl`
+- Ausgabe kann mit bekannten Tools wie `grep` durchsucht werden
+- besser ist aber die Verwendung von Filtern
+- `journalctl` bietet jede Menge miteinander zu kombinierende Filtermoeglichkeiten
+- `journalctl -b`: alles seit dem aktuellen Boot 
+- `journalctl -f`: Log live beobachten (-> `tail -f`) 
+- `journalctl -e`: direkt ans Ende der Logs springen 
+- `journalctl -r`: neueste Einträge zuerst
+- `journalctl -n 20`: nur die letzten 20 Zeilen
+- `journalctl -u apache2`: alle Logs des Units Apache2 
+- `journalctl -since yesterday --until '2022-02-10 10:45'`: alle Einträge von gestern bis zum 10.02.2022 um 10:45 Uhr
+- etc.
+- siehe auch `man journalctl`
+- `journalctl --vacuum-size=100MB`: beschneidet das Journal nachträglich auf eine Groesse von 10MB
+- Groesse ungefähr, da zusammenhängende Logeinträge nicht getrennt werden
+- daher nachher Konsistenzprüfung mit `journalctl --verify` noetig
 
 
 

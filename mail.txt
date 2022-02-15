@@ -1,0 +1,21 @@
+# Mail
+
+# Mailsystem Komponenten
+
+- MUA: Mail User Agent -> Mail Programme / Clients: Thunderbird, Evolution, kmail, (mail,) Outlook - Mails lesen, verfassen...
+- MDA: Mail Delivery Agent -> verarbeitet Mails auf dem Server, entscheidet wo/wie sie an den Empfänger geleitet werden (lokale Zustellung/an Mailadresse): `procmail`, `cyrus`, `maildrop`
+- MTA: Mail Transfer Agent ->  "eigentlicher Mailserver", zum Senden und Empfangen von Mails: Postfix, sendmail, exim, qmail
+
+
+
+## SMTP
+- _Simple Mail Transfer Protocol_
+- zum Empfangen von Mails
+- Port 25
+
+## POP3 / IMAP
+- zum Senden von Mails
+- POP3: _kopiert_ Mails vom Server auf den Client, auf dem Client geloeschte Mails verbleiben auf dem Server (Port 110)
+- IMAP: _synchronisiert_ Mails zwischen Server und allen Clients, auf einem Client geloeschte Mail wird auf dem Server und somit auf allen anderen Clients geloescht (143)
+
+
