@@ -842,7 +842,86 @@ Ablaufdatum der Passwörter ändern
 - daher nachher Konsistenzprüfung mit `journalctl --verify` noetig
 
 
+## Dienstag
 
+### Zeit(synchronisation) - ohne systemd
+
+#### Uhrzeit
+- wir haben zwei "Uhren" auf unserem System:
+  - Systemuhr/-zeit (Software, Betriebssystem)
+    - `date`
+    - `date --set="11 Nov 2011 11:11:11"
+    - `date -s "11 Nov 2011 11:11:11"
+  - Hardwareuhr/-zeit (Motherboard) _RTC_
+    - `hwclock`
+- sollten syncronisiert werden
+- die Systemzeit sollte die massgebliche Zeit sein:
+  - `sudo hwclock --systohc`
+
+#### Zeitzonen
+- unter `/usr/share/zoneinfo` befinden sich die Zeitzonen (in Unterverzeichnissen), keine Textdateien
+- sortiert nach _Kontinent_/_Stadt_
+- um die Zeitzonen einzustellen, wird ein Symlink der Zeitzone unter `/usr/share/zoneinfo` auf `/etc/localtime` erstellt
+- diese Einstellung betrifft nur die Systemzeit
+- um die Zeitzone auch für die Hardwareclock zu übernehmen müssen die Uhren erneut synchronisisert werden mit `sudo hwclock --systohc`
+- die aktuelle Zeitzonen findet sich auch in `/etc/timezone` (Textdatei)
+- interaktives Auflisten der Zeitzonen mit `tzselect`
+- für die aktuelle Shellsession kann die Zeitzone über die Variable `TZ` eingestellt werden: `TZ='America/Los_Angeles date`
+
+### Zeit(synchronisation) - mit systemd
+- Kommando `timedatectl` zum Anzeigen der Uhrzeit (Hard- und Systemuhr) und Zeitzone
+
+#### Uhrzeit
+- `sudo timedatectl set-time '2022-02-22 2:22:22'`
+
+#### Zeitzonen
+- werden mit `sudo timedatectl set-timezone Europe/Berlin` eingestellt (Autovervollständigung funktioniert)
+- hierdurch wird analog zu oben ein entsprechender Symlink erstellt
+- die Hardwareuht kann mit `sudo timedatectl set-local-rtc` synchronisiert werden
+- hiervon wird aber bei der Verwendung von `systemd` abgeraten, Hardwareuhr sollte weiterhin unter _UTC_ laufen
+
+### NTP
+- _Network Time Protocol_
+- die Systemzeit wird über Server(pools) mit Refernzuhren abgeglichen
+- Aufbau ist hierarchisch:
+  - _Stratum 1_ sind nicht oeffentlich zugänglich, greifen direkt auf die Refernzuhren zu
+  - _Stratum 2_ koenne auf Stratum 1 Maschinen zugreifen
+  - _Stratum 3_ koenne auf Stratum 2 Maschinen zugreifen
+  - _Stratum 4_ koenne auf Stratum 3 Maschinen zugreifen
+  - ab _Stratum 2_ ist der Zugriff oeffentlich
+- unser Rechner kontaktiert in der Regel _Stratum 4_ Maschinen
+
+#### in diesem Zusammenhang wichtige Begriffe
+- _Offset_: This refers to the absolute difference between system time and NTP time. For example, if the system clock reads 12:00:02 and NTP time reads 11:59:58, then the offset between the two clocks is four seconds.
+
+- _Step_: If the time offset between the NTP provider and a consumer is greater than 128ms, then NTP will perform a single significant change to system time, as opposed to slowing or speeding the system time. This is called stepping.
+
+- _Slew_: Slewing refers to the changes made to system time when the offset between system time and NTP is less than 128ms. If this is the case, then changes will be made gradually. This is referred to as slewing.
+
+- _Insane Time_: If the offset between system time and NTP time is greater than 17 minutes, then the system time is considered insane and the NTP daemon will not introduce any changes to system time. Special steps will have to be taken to bring system time within 17 minutes of proper time.
+
+- _Drift_: Drift refers to the phenomenon where two clocks become out of sync over time. Essentially if two clocks are initially synchronised but then become out of sync over time, then clock drift is occurring.
+
+- _Jitter_: Jitter refers to the amount of drift since the last time a clock was queried. So if the last NTP sync occurred 17 minutes ago, and the offset between the NTP provider and consumer is 3 milliseconds, then 3 milliseconds is the jitter.
+
+- deutsche ausführliche Version unter https://www.meinberg.de/german/info/ntp.htm
+
+#### Kommandos und Dateien
+- NTP Daemon: `ntpd`
+- Konfigurationsdatei: `/etc/ntp.conf`
+- `ntpq` oder `ntpdc`: Interaktive Abfragen
+
+#### SNTP
+- unter `systemd` wird _SNTP_ eingesetzt (_Simple Network Time Protocol_)
+- geringerer Funktionsumfang, leichtgewichtiger, einfacher zu konfigurieren
+- Zeit wird nur von einem einzigen Server bezogen
+- hierfür muss `systemd-timesyncd` laufen
+
+#### chrony
+- alternative Implementation von NTP
+- Dienst heisst `chronyd`
+- CLI Interface heisst `chronyc`
+- Konfigurationsdatei unter `/etc/chrony.conf`
 
 
 
