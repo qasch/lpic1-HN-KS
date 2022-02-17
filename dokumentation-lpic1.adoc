@@ -879,6 +879,8 @@ Ablaufdatum der Passwörter ändern
 - hierdurch wird analog zu oben ein entsprechender Symlink erstellt
 - die Hardwareuht kann mit `sudo timedatectl set-local-rtc` synchronisiert werden
 - hiervon wird aber bei der Verwendung von `systemd` abgeraten, Hardwareuhr sollte weiterhin unter _UTC_ laufen
+- `tzconfig`
+- `dpkg-reconfigure tzdata`
 
 ### NTP
 - _Network Time Protocol_
@@ -922,6 +924,86 @@ Ablaufdatum der Passwörter ändern
 - Dienst heisst `chronyd`
 - CLI Interface heisst `chronyc`
 - Konfigurationsdatei unter `/etc/chrony.conf`
+
+## Mittwoch
+
+### Printing
+
+#### CUPS
+
+- _CUPS_: Common Unix Printing Service
+- Administration über Weboberfläche (`http://localhost:631`) oder über die Konfigurationsdatei `/etc/cups/cupsd.conf` bzw. CLI-Tools
+- weitere Konfigurationsdatein unterhalb von `/etc/cups/`
+- Druckwarteschlange unter `/var/spool/cups`
+- es koennen Drucker hinzugefügt, entfernt, modifiziert werden, die Druckwarteschlange verwaltet, Drucker koennen lokal z.B. über USB oder über das Netzwerk angeschlossen sein
+
+#### Kommandozeilentools
+- folgende Programme funtionieren auch unter CUPS:
+  - `lpr`: zum Drucken von Dateien: `lpr -P Samsung_ML-2160_Series somefile.txt`
+  - `lprm`: Druckaufträge loeschen. Ohne Angabe von Optionen wird der aktuell aktive geloescht, `lprm -` loescht alle, `lprm 32` loescht Auftrag mit der Job ID 32
+  - `cancel`: loescht den aktiven Auftrag des aufrufenden Benutzers
+  - `lpq`: Druckerwarteschlange anzeigen `lpq -P Samsung_ML-2160_Series`
+  - `lpc`: interaktiv, unter CUPS (nur eingeschränkt)
+- für Prüfung nicht relevant:
+  - `lpstat`
+  - `lpadmin`: Drucker unter CUPS konfigurieren, z.B. Standarddrucker setzen etx.
+  - `lpoptions`: Optionen von Druckern anzeigen und Standardwerte setzen
+  - `lpinfo`: (deprecated) Verfügbare Drucker und Treiber anzeigen
+
+### Lokalisierung und Internationalisierung
+- über die Lokalisierung werden Einheiten, Zeichen usw. im länder-/gebietsspezifischen Format dargestellt (Meter - Inches, 24 Stunden Format - 12 Stunden Format etc.)
+- die Datei `/etc/locale.conf` enthält Systemvariablen, über die die Lokalisierung definiert werden kann:
+- `LC_CTYPE` - Zeichenklassifikationen
+- `LC_COLLATE` - Sortierreihenfolge
+- `LC_TIME` - Zeit- und Datumsformat
+- `LC_NUMERIC` - numerische Formate außerhalb des Finanzsektors
+- `LC_MONETARY` - numerische Formate des Finanzsektors
+- `LC_MESSAGES` - Formate für informative und diagnostische Benachrichtigungen
+- `LC_PAPER` - Papierformate
+- `LC_NAME` - Namenformate
+- `LC_ADDRESS` - Adressformate
+- `LC_TELEPHONE` - Formate der Telefonnummern
+- `LC_MEASUREMENT` - Maßeinheiten (metrisch oder andere)
+- `LC_IDENTIFICATION` - Metadaten der Lokalisation
+- `LC_ALL` - wenn gesetzt (normalerweise nicht) werden alle anderen Variablen überschrieben
+- `LANG` - geringe Priorität, nur Auswirkungen wenn keine anderen gesetzt
+- `LANG=C` - nützlich z.B. in Skripten bei Sortierungen o.Ä., Daten werden nicht anhand der jeweiligen Zeichentabelle sonder roh/raw sortiert
+- verfügbare _locale_ unter `/usr/share/i18n/locale`
+- `locale -a` zeigt alle verfügbaren Lokalisierungen an
+- `locale -m` zeigt alle verfügbaren Zeichensätze an
+- `localectl` anzeige der Lokalisierungen, Keyboardeinstellungen
+- `localectl set-locale en_US.UTF-8`
+- `localectl set-locale LC_MESSAGES=en_US.utf8`
+- `localectl set-locale LC_MESSAGES=en_US.UTF-8`
+- `localectl list-locales`
+- `iconv -f ISO-8859 -t UTF-8 my-iso-encoded-file -o my-utf8-encoded-file`
+
+### CLientseitiges DNS
+
+- in der Datei `/etc/nsswitch.conf` findet eine Zuweisung von Quellen zur Namensaufloesung und Anwendugen statt
+- die angegebenen Services werden der Reihenfolge nach abgearbeitet
+- es koennen einfache logische Ausdrücke verwendet werden (`resolve [!UNAVAIL=return] dns`: ist DNS also nicht nicht-vorhanden wird nicht die nächste Methode angewandt, sondern abgebrochen)
+- `/etc/resolve.conf`: 
+  - kann bis zu drei `nameserver` Einträge enthalten
+  - `search`: bei lokalen Anfragen kann der hier definiert Teil der URL weggelassen werden 
+    - `search lpi.org` -> Eingabe von `learning` anstatt `learning.lpi.org` reicht aus
+  - `domain`: hier wird die Domäne definiert, kann wie `search` auch für die Kurzsuche verwendet werden, sind beide vorhanden, gilt nur der letzte Eintrag
+- `/etc/hosts`: lokale Namensaufloesung, Vorläufer DNS
+- `systemd-resolved`: kein vollwertiger DNS Server, lauscht wenn gestartet an `127.0.0.53`, Konfiguration unter `/etc/systemd/resolved.conf`
+- `getent`: zur Abfrage von datenbankartigen Dateien, Ausgabe wie `grep`
+- `host`: Namen in IP Adressen aufloesen
+- `host -t MX`: nur die MX-Records anzeigen
+- `dig`: ausführliche Informationen über angefragte URL
+- Ausgabe kann gut angepasst werden (Filterung nach Records usw.)
+- `dig +short lpi.org`: nur Ergebnis, keine weitere Ausgabe
+
+
+
+
+
+
+
+
 
 
 
