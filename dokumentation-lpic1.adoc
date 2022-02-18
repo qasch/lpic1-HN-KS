@@ -997,9 +997,133 @@ Ablaufdatum der Passwörter ändern
 - Ausgabe kann gut angepasst werden (Filterung nach Records usw.)
 - `dig +short lpi.org`: nur Ergebnis, keine weitere Ausgabe
 
+## Donnerstag
 
+### X-Server
 
+#### Aufbau von X
+##### Client-Server-Applikation
 
+- Kommunikation zwischen X-Server und X-Client durchläuft immer Netzwerkschicht
+
+##### X-Server
+- kommuniziert mit der Hardware (Grafikkarte)
+- nimmt Eingaben von der Tastatur entgegen
+- hat keinen Einfluss auf das Aussehen der Anwendungsprogramme
+- nur für Ausgabe zuständig
+- kann auf entfernter Maschine im Netzwerk laufen
+
+##### X-Client
+- kommuniziert mit dem X-Server
+- genauer: ist ein Anwendungsprogramm (Browser, Mail-Client ...)
+
+##### Windowmanager
+- ist ein X-Client
+- ist für das Aussehen der Fenster und Schaltflächen zuständig
+- Beispiele: KWin, Metacity, Windowmaker, FVWM95, i3, twm ...
+
+##### Displaymanager
+- für Authentifizierung von Benutzern und Starten der grafischen Umgebung zuständig
+
+##### Desktop Environment
+- vorkonfigurierte Ansammlung von Anwenderprogrammen, Windowmanager und Displaymanager
+- Beispiele: KDE, GNOME, LXDE, Xfce, Cinnamon, Mate …​
+- KDE: KWin und kdm
+- GNOME: Metacity (ältere Sawfish) und gdm
+
+#### Startvorgang von X
+- `startx`: Frontend für Startskript `xinit`
+- bezieht zusätzliche Skripte mit ein
+- typischerweise:
+  - `xinitrc` Startskript für xinit
+  - `xserverrc` Startskript für den X-Server
+- unter /etc/X11` liegen die systemweiten Dateien, werden nur ausgelesen, falls keine benutzerspezifische existiert
+- `xinit`: zuständig für die eigentliche Initialisierung von X-Window
+- `xinitrc`: welche X-Clients und welcher Windowmanager werden gestartet
+- aus dieser Datei heraus gestartete Programme sollten immer in den Hintergrund geschickt werden (&)
+
+#### X-Libraries
+- dynamische Bibliotheken für grafische Programme
+- bei GNOME: Bibliotheken aus dem GTK (GIMP Toolkit)
+- bei KDE: QT Libraries
+
+#### `xorg.conf`
+- Hauptkonfigurationsdatei des X-Servers
+- inkludiert Dateien unter `/etc/X11/xorg.conf.d`
+- unterteilt in Sektionen:
+
+##### Section Files
+- Pfade, die der Server zum Betrieb benötigt
+- Fontpath Verzeichnisse für Fonts
+- RgbPath Datei, in der Farbbezeichnungen in RGB-Werte übersetzt werden
+
+##### Section Server-Flags
+- globale Einstellungen für den X-Server (Power-Management, Hotkeys...)
+
+##### Section Input Device
+- Tastatur und Maus
+- kommt mehrfach vor wegen Übersichtlichkeit
+
+##### Section Monitor und Modes
+- Section Monitor: technische Daten Monitor(e)
+- Section Modes: mögliche verwendbaren Videomodi
+
+##### Section Device
+- Angaben über Grafikkarte
+
+##### Section Screen
+- führt Grafikkarten und Monitor(e) zusammen → Screen
+- daher eindeutiger Bezeichner (Identifier) sowohl für Grafikkarte als auch für Monitor
+
+##### X-Fontserver
+- zentrale Verwaltung von Fonts
+- `/etc/X11/fs/congig`
+
+##### X-Display exportieren
+- Positionierung Benutzer ungewohnt: sitzt am Server, Client an einem anderen Ort
+- Serverseitige Maßnahmen: X-Server muss Zugriff auf sein Display durch X-Client erlauben:
+
+----
+xhost + bzw. xhost +hostname-client
+----
+
+- Zugriff verbieten mit `xhost -` bzw. `xhost -hostname-client`
+- Clientseitige Maßnahmen: dort wo CLient-Programm ausgeführt werden soll muss DISPLAY - Variable geändert werden (Umleitung auf X-Server)
+
+- `xdpyinfo`: Informatinen über den installierten X-Server
+
+#### Wayland
+- Neuentwicklung des X-Servers (komplett andere Architektur, Programme müssen portiert werden
+
+### Netwerkkonfiguration
+- `nmcli`: CLI Programm für NetworkManager
+- `nmtui`: TUI Programm für NetworkManager
+- `ip`: moderne Toolbox zur Netzkoniguration (Anzeige Interfaces/Routen/Tunnel/Neighbours)
+- mit `ip` kann ein Interface (dynamisch) konfiguriert werden (IP Adresse zuweisen, Standardgateway setzten usw.)
+- `ifup`, `ifdown`: Interfaces, die in  `/etc/netwokr/interfaces` definiert sind hoch- bzw. herunterfahren (auf RedHat basierten System solche, die in `/etc/sysconfig/network-scripts`
+- `/etc/network/interfaces`: Statische (einen Reboot überstehende) Netzwerkkonfiguration unter Debian basierten Systemen
+- Legacy Tools: `ifconfig`, `route` (aus dem Paket `net-tools`)
+
+### Network Troubleshooting
+- `ping`: nutzt das ICMP Protokoll um kleine Datenpakete ans Ziel zu senden um so die Erreichbarkeit und "Reaktionszeit" zu ermitteln
+- `ping -c 5` sendet nur 5 Pakete (`--count`)
+- `traceroute`: sendet jeweils drei Pakete zu jedem Hopp auf dem Weg zum Ziel und misst die Dauer/Latenz, die die Pakete bis zum jeweiligen Hopp brauchen
+- standardmässig Begrenzung auf 30 Hopps
+- Standardprotokoll ist UDP
+- andere Protokolle: `-T` für TCP, `-I` für ICMP
+- nützlich, falls bestimmte Protokolle geblockt werden (von irgend einem Server auf dem Weg oder dem Ziel selbst)
+- `tracepath`: ähnlich wie `traceroute`, hier wird aber die maximale Paketgroesse (MTU) bestimmt, auch ohne root Rechte zu nutzen
+- `netstat`: Diagnoseprogramm zum Anzeigen der aktuellen Verbindungen (offene Ports, Dienste dahinter ...)
+- `netstat -tulpen`: alle offenen TCP und UPD Ports, im Status LISTENING, ausführendes Kommando, keine Namensaufloesung dafür, erweiterte Ansicht
+- `netstat -s`: Detailierte Ausgabe / Statistik 
+- `netstat -r`: Ausgabe der Routingtabelle
+- `ss`: Neuentwicklung, greift direkt auf den Kernel zu, dadurch schneller, viele Optionen gleich
+- `netcat`: das _Schweizer Taschenmesser_, CLI Programm zur Netzwerkdiagnose
+- kann beliebige Datenpakete versenden und Empfangen
+- so koenne z.B. Dateien übertragen werden oder auch eine Reverse Shell gestartet werden
+
+#### `hostnamectl`
+- Anzeige und Setzen des Hostnamens (-> `/etc/hostname`) 
 
 
 
