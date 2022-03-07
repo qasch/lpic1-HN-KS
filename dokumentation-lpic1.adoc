@@ -37,7 +37,7 @@ rm -r
 ----
 
 - absolute (beginnen immer mit einem `/`) und relative Pfadangaben
-- Sonderzeichen: `*`, `?`, ` ` (Leerzeichen)
+- Sonderzeichen: `*`, `?`, Leerzeichen
 - Escapen von Sonderzeichen
 - Suche innerhalb der Manpages
 - Variablen (Vererbung/Subshells)
@@ -50,7 +50,7 @@ rm -r
 
 - Aufbau Shell-Prompt (Variable `PS1`)
 - Definition eigener Aliase (in `.bash_aliases`)
-- "Sicherheitseinstellungen" für `cp`, `rm` und `mv` (`-i`)
+- "Sicherheitseinstellungen" für `cp`, `rm` und `mv` (Option `-i`)
 - Shell Builtins / externe Kommandos
 - Pipe `|`
 - `less`: Seitenweises Anzeigen von Dateien/Textstroemen
@@ -158,7 +158,7 @@ chmod ug+rwx datei  # User und Gruppe alle Rechte hinzufügen
 
 ### Gruppen
 
-- es gibt zwei Arten von Gruppen: die initiale/primäre Gruppe eines Benutzers (heisst in der Regel genauso wie der Benutzer) und die zusätzlichen (suplementary) Gruppen
+- es gibt zwei Arten von Gruppen: die initiale/primäre Gruppe eines Benutzers (heisst in der Regel genauso wie der Benutzer) und die zusätzlichen (_suplementary_) Gruppen
 - wenn man einen Benutzer einer Gruppe hinzufügt, muss sich dieser einmal komplett ab- und wieder anmelden, damit die Gruppenzugehoerigkeit aktiv wird (Konfigurationsdatei `/etc/group` wird dann neu eingelesen
 
 
@@ -437,12 +437,12 @@ httpw://nonono
 ### Paketverwaltung Debian
 
 #### dpkg
-- dpkg: "Backend hinter `apt`"
+- dpkg: Backend hinter `apt`
 - kann  Pakete installieren, deinstallieren etc.
 - Einschränkungen: keine Pakekte übers Internet installieren, kann keine Abhängigkeiten aufloesen, zeigt diese allerdings an
 - im Verzeichnis `/var/lib/dpkg` befinden sich Dateien und Verzeichnisse, die eine Art Datenbank für `dpkg` (und `apt`) sind
 - Informationen über Pakete, deren Zustand (installiert, teilweise installiert), verfügbare Pakete etc  finden sich hier
-- `dpkg -i /--install <pfad-zum-deb-paket>`: installiert lokal vorhandenes Paket  
+- `dpkg -i / --install <pfad-zum-deb-paket>`: installiert lokal vorhandenes Paket  
 - `dpkg -Ri / --recursive --install <verzeichnis>`: installiert alle `*.deb` Pakete im Verzeichnis (rekursiv)
 - `dpkg -r / --remove <paketname>`: Entfernt Paket, Konfigdateien bleiben erhalten  
 - `dpkg -P / --purge <paketname>`: Paket und Konfigdateien werden entfernt  
@@ -547,8 +547,8 @@ httpw://nonono
 - durch `-i` (`--in-place`) wird die Datei geändert
 - - `sed` koennen auch mehrere Dateien als Argumente übergeben werden
 - `sed -i.backup 's/root/CV/g' ls-tmp.txt`: duchr `-i.backup` wird vor dem Ersetzen einen Kopie der Datei mit der Endung `.backup` erzeugt
-- `sed '/#/d' .bashrc` löscht alle Zeilen, die eine `#`
-- `grep -v '^#' .bashrc | grep -v '^$'` - `sed -e '/^#/d' -e '/^$/d' .bashrc` 
+- `sed '/\#/d' .bashrc` löscht alle Zeilen, in denen eine `\#` (Raute) vorkommt
+- `grep -v '^\#' .bashrc | grep -v '^$'` - `sed -e '/^\#/d' -e '/^$/d' .bashrc` 
 - `sed '1,103d .bashrc` löscht alle zeilen von 1-103
 - `sed '1,10!d' .bashrc` löscht alle zeilen von 10 ab, das `!` invertiert hier die Bedeutung von `d` (Loeschen -> Anzeigen)
 - mehrere _Skripte_ koenne mit `-e` hintereinander ausgeführt werden
@@ -568,6 +568,7 @@ httpw://nonono
 - `ln -s ~/.bashrc ~/links/bashrc-link` erstellt ein link von einer datei wenn die beiden dateien nicht im selben Verzeichniss sond müssen sie mit absolutem Pfad angegeben werden - `ln -s ~/compression-comparsion/ ~/links/compression-comparsion-link` um ein Verzeichniss soft zu verlinken 
 - Softlinks haben immer komplette Berechtigung angezeigt haben aber die gleichen Rechte wie die Originale 
 - ist ein Zeiger auf den Dateinamen einer Datei aber nicht auf den Speicher 
+
 #### Hardlinks 
 - macht kein Unterschied zwischen primärer Datei 
 - ist ein weiterer Zeiger auf den Speicherbereich einer Datei im Speicher 
@@ -850,8 +851,8 @@ Ablaufdatum der Passwörter ändern
 - wir haben zwei "Uhren" auf unserem System:
   - Systemuhr/-zeit (Software, Betriebssystem)
     - `date`
-    - `date --set="11 Nov 2011 11:11:11"
-    - `date -s "11 Nov 2011 11:11:11"
+    - `date --set="11 Nov 2011 11:11:11"`
+    - `date -s "11 Nov 2011 11:11:11"`
   - Hardwareuhr/-zeit (Motherboard) _RTC_
     - `hwclock`
 - sollten syncronisiert werden
@@ -978,7 +979,7 @@ Ablaufdatum der Passwörter ändern
 - `localectl list-locales`
 - `iconv -f ISO-8859 -t UTF-8 my-iso-encoded-file -o my-utf8-encoded-file`
 
-### CLientseitiges DNS
+### Clientseitiges DNS
 
 - in der Datei `/etc/nsswitch.conf` findet eine Zuweisung von Quellen zur Namensaufloesung und Anwendugen statt
 - die angegebenen Services werden der Reihenfolge nach abgearbeitet
