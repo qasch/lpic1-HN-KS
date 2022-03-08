@@ -548,7 +548,8 @@ httpw://nonono
 - - `sed` koennen auch mehrere Dateien als Argumente übergeben werden
 - `sed -i.backup 's/root/CV/g' ls-tmp.txt`: duchr `-i.backup` wird vor dem Ersetzen einen Kopie der Datei mit der Endung `.backup` erzeugt
 - `sed '/\#/d' .bashrc` löscht alle Zeilen, in denen eine `\#` (Raute) vorkommt
-- `grep -v '^\#' .bashrc | grep -v '^$'` - `sed -e '/^\#/d' -e '/^$/d' .bashrc` 
+- `grep -v '^\#' .bashrc | grep -v '^$'` 
+- `sed -e '/^\#/d' -e '/^$/d' .bashrc` 
 - `sed '1,103d .bashrc` löscht alle zeilen von 1-103
 - `sed '1,10!d' .bashrc` löscht alle zeilen von 10 ab, das `!` invertiert hier die Bedeutung von `d` (Loeschen -> Anzeigen)
 - mehrere _Skripte_ koenne mit `-e` hintereinander ausgeführt werden
@@ -1126,8 +1127,38 @@ xhost + bzw. xhost +hostname-client
 #### `hostnamectl`
 - Anzeige und Setzen des Hostnamens (-> `/etc/hostname`) 
 
+## Montag
+### Umask
+- legt fest, mit welchen Berechtigungen neu erstellte Dateien oder Verzeichnisse versehen werden
+- die in der Umask gesetzten Bits werden nicht vergeben (von den sinnvollen Vollberechtigungen "substrahiert")
+- bei Dateien sind die sinnvollen Vollberechtigungen `666`, bei Verzeichnissen `777`
+- Bsp.: umask 022 -> Dateien 644, Verzeichnisse 755 (kein Schreibsrecht für Gruppe und Others)
+- Bsp.: umask 023 -> Dateien 644, Verzeichnisse 754 
 
+### Sonderbits
+- *SUID*: wenn auf eine ausführbare Binärdatei gesetzt, wird das Kommando nicht mit den Rechten des aufrufenden Benutzer ausgeführt wird, sondern mit denen des Besitzers der Datei. Bsp.: `passwd` (editiert `/etc/shadow`)
+- *SGID*: wenn auf eine ausführbare Binärdatei gesetzt, ähnlich wie das `SUID` Bit: das Kommando wird mit den Rechten der Gruppe ausgeführt, wenn auf ein Verzeichnis gesetzt, werden alle neu darin erstellten Dateien der Gruppe zugeordnet
+- *StickyBit*: auf ein Verzeichins gestzt, kann nur noch der Besitzer der Datei oder `root` diese verändertn oder löschen. Bsp.: `/tmp`
+- `rwsrw-rw-`: SUID Bit und Execute Bit für Besitzer gesetzt
+- `rwSrw-rw-`: SUID Bit aber kein Execute Bit für Besitzer gesetzt
+- `rw-rwsrw-`: SGID Bit und Execute Bit für Gruppe gesetzt
+- `rw-rwSrw-`: SGID Bit aber kein Execute Bit für Gruppe gesetzt
+- `rwxrwxrwt`: Sticky Bit und Execute Bit für Others gesetzt
+- `rwxrwxrwT`: Sticky Bit aber kein Execute Bit für Others gesetzt
 
+### at
+- führt Aufgaben einmalig zu einem bestimmten Zeitpunkt aus
+- kann interaktiv verwendet werden oder über Optionen
+- Bsp.: `at now +2 minutes touch datei1`
+- Bsp.: `at teetime tomorrow touch feierabend.txt`
+- `atq` oder `at -l` zeigt ausstehende Jobs an
+- `atrm ID` oder `at -r ID` / `at -d ID` löscht Job mit ID
+- Zugangssteuerung durch `at.allow` und `at.deny`
+
+### systemd-run
+- systemd Alternative zu `at`
+- `systemd-run --on-calendar="2022-03-07 15:34" touch datei3`
+- `systemd-run --on-active="2min" touch datei4`
 
 
 
