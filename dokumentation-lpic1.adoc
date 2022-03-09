@@ -1164,6 +1164,55 @@ xhost + bzw. xhost +hostname-client
 - `systemd-run --on-calendar="2022-03-07 15:34" touch datei3`
 - `systemd-run --on-active="2min" touch datei4`
 
+## Sicherheitschecks
+### Offene Ports
+- `netstat -tulpn`
+- `ss -tulpn`
+- `lsof -i`: Anzeige aller offenen Ports
+- `lsof -i4`: Anzeige aller offenen IPv4 Ports
+- `lsof -i6`: Anzeige aller offenen IPv6 Ports
+- `lsof -i :22`: Prüfung, ob Port 22 offen ist 
+- `lsof -i@192.168.2.100:22`: Prüfung, ob Port 22 auf Host 192.168.2.100 offen ist 
+- `nmap <host>`: <host> auf offenen Ports etc. prüfen 
+- `nmap -Ov <host>`: <host> auf offenen Ports, Betriebssystem etc. prüfen 
 
+### Benutzer
+- `last`: Liste der zuletzt angemeldeten User
+- `lastb`: Liste der fehlgeschlagenen Anmeldeversuche
+- `who`: Wer ist momentan angemeldet
+- `w`: Wer ist momentan angemeldet (andere, übersichtlichere Ausgabe)
+
+## sudo
+- `sudo` kann sehr fein/genau konfiguriert werden
+- `tux ALL (ALL:ALL) ALL`: tux kann von jedem Host sich als jeder Benutzer, jede Gruppe anmelden und jedes Kommando mit root Rechten ausführen
+- `tux 192.168.2.100 admin /usr/local/bin/backup.sh`: tux kann nur vom Host 192.168.2.100 sich als `admin` anmelden und das Skript `backup.sh` ausführen
+- `tux 192.168.2.100 admin :NOPASSWD /usr/local/bin/backup.sh`: tux kann nur vom Host 192.168.2.100 sich als `admin` anmelden und das Skript `backup.sh` ausführen, ohne ein Passwort eingeben zu müssen
+- für Hosts, Benutzer und Kommandos können Aliase definiert werden
+
+## ulimit
+- hiemit können Grenzen für bestimmte Systemresourcen (Anzahl/Grösse Dateien etc.) festgelegt werden
+- es gibt ein Soft- und ein Hardlimit
+- Hardlimit kann nur von `root` erhöht werden
+- Softlimit von regulären Benutzern bis an die Grenze des Hardlimits
+- `ulimit -a`: Anzeige aller Limits
+- `ulimit -Ha`: Anzeige aller Hardlimits
+- `ulimit -Sa`: Anzeige aller Softlimits
+- `ulimit -Hf 1000`: Begrenzung des Hardlimits für Grösse Dateien auf 1000
+- Festlegung in Datei `/etc/security/limits.conf`
+
+## Superdaemons
+- ein Daemon/Service, der den anderen Services vorgeschaltet ist und diese bei Bedarf starten und stoppen kann
+- früher wichtig zur Minimierung des Resourcenverbrauchs
+- `xinetd`
+- `/etc/xinetd.conf`
+- `/etc/xinetd.d`: hier liegen die einzelnen Konfigurations-/Servicedateien
+
+## TCP Wrapper
+- in `xinited` eingebaut
+- schützt vor unbefugten Zugriffen, Vorläufer von Firewalls
+- `/etc/hosts.allow`: wird hier eine Regel gefunden, wird der Zugriff basierend auf dieser Regel erlaubt, `/etc/hosts.deny` wird dann nicht mehr ausgewertet
+- `/etc/hosts.deny`: wird hier eine Regel gefunden, wird der Zugriff basierend auf dieser Regel verweigert
+-  wenn keine Regel in keiner der beiden Dateien gefunden wird, wird der Zugriff erlaubt
+- ist eine oder keine der beiden Dateien vorhanden, gilt/gelten diese Datei(en) als leer
 
 
